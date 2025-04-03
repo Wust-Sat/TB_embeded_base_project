@@ -15,4 +15,5 @@ extern se::GpioPin gpio_user_led_1;
 extern se::GpioPin gpio_user_led_2;
 extern se::GpioPin gpio_status_led;
 extern se::GpioPin gpio_transiver_can_cs;
-extern se::FDCAN fdcan1;
+
+extern std::shared_ptr<se::FDCAN> fdcan1;
