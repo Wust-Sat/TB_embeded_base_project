@@ -80,5 +80,8 @@
     "typeinfo": "cpp",
     "variant": "cpp"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "cSpell.words": [
+    "microcontroller"
+  ]
 }
