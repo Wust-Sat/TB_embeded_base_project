@@ -19,7 +19,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME template_card)
+set(CMAKE_PROJECT_NAME tb_base_board)
 
 # Include toolchain file
 include("cmake/gcc-arm-none-eabi.cmake")
