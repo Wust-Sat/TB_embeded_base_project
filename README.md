@@ -22,3 +22,5 @@ cd TB_embeded_base_project
 ```bash
 ./compile.sh
 ```
+
+5. Add your code in **src** directory.
