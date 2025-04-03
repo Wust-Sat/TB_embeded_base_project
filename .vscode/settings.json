@@ -10,6 +10,17 @@
     "/opt/ros/humble/local/lib/python3.10/dist-packages"
   ],
   "files.associations": {
-    "functional": "cpp"
-  }
+    "functional": "cpp",
+    "chrono": "cpp",
+    "*.tcc": "cpp",
+    "deque": "cpp",
+    "forward_list": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "vector": "cpp",
+    "system_error": "cpp",
+    "array": "cpp",
+    "*.txx": "cpp"
+  },
+  "editor.formatOnSave": true
 }
