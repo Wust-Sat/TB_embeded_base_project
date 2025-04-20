@@ -10,7 +10,7 @@
 #include "simple_task.hpp"
 #include "stmepic.hpp"
 #include "status.hpp"
-
+#include "logger.hpp"
 
 // ###############################################################################
 // HARDWARE
@@ -19,13 +19,31 @@ se::GpioPin gpio_user_led_1(*USER_LED_1_GPIO_Port, USER_LED_1_Pin);
 se::GpioPin gpio_user_led_2(*USER_LED_2_GPIO_Port, USER_LED_2_Pin);
 se::GpioPin gpio_status_led(*STATUS_LED_GPIO_Port, STATUS_LED_Pin);
 se::GpioPin gpio_transiver_can_cs(*CAN_TRANSIVER_CS_GPIO_Port, CAN_TRANSIVER_CS_Pin);
-
 std::shared_ptr<se::FDCAN> fdcan1;
 
 
 // ###############################################################################
 // TASKS
 se::SimpleTask blink_task;
+
+
+// ###############################################################################
+// Timer callback
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  /* USER CODE BEGIN Callback 0 */
+
+  if(htim->Instance == TIM6) {
+    se::Ticker::get_instance().irq_update_ticker();
+  }
+
+  /* USER CODE END Callback 0 */
+  if(htim->Instance == TIM7) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 
 // Example tasks for a blinking LED
@@ -79,9 +97,17 @@ void callback_can_some_frame(se::CanBase &can, se::CanDataFrame &frame, void *ar
 
 void main_prog() {
 
+  se::Ticker::get_instance().init(&htim6);
+
+  // Initialize Logger
+  se::Logger::get_instance().init(se::LOG_LEVEL::LOG_LEVEL_DEBUG, true, nullptr, true);
+
+  // now we can print log messages to debugger console
+
   // Initialize FDCAN
   FDCAN_FilterTypeDef fdfilter = {};
   STMEPIC_ASSING_TO_OR_HRESET(fdcan1, se::FDCAN::Make(hfdcan1, fdfilter, nullptr, nullptr));
+
 
   // We add a callback for the CAN frame with ID 0x200
   STMEPIC_NONE_OR_HRESET(fdcan1->add_callback(0x200, callback_can_some_frame, nullptr));

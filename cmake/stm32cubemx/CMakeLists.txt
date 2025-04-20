@@ -72,7 +72,6 @@ target_sources(stm32cubemx INTERFACE
     ../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c
     ../../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
     ../../Core/Src/sysmem.c
-    ../../Core/Src/syscalls.c
     ../../startup_stm32u575xx.s
 )
 

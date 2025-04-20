@@ -1,5 +1,5 @@
 {
-  "stm32-for-vscode.openOCDPath": "/usr/bin/openocd",
+  "stm32-for-vscode.openOCDPath": false,
   "ros.distro": "humble",
   "python.autoComplete.extraPaths": [
     "/opt/ros/humble/lib/python3.10/site-packages",

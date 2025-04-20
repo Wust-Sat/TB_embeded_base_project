@@ -13,6 +13,9 @@ heap_file="Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c"
 if [ -f $main_file ]; then
   mv $main_file $main_file_cpp
 
+    # Comment out MX_FREERTOS_Init in main.cpp
+  sed -i 's|MX_FREERTOS_Init();|// MX_FREERTOS_Init();|' $main_file_cpp
+  
   sed -i '/\/\* USER CODE BEGIN Includes \*\//a #include "main_prog.hpp"' $main_file_cpp
   sed -i '/osKernelInitialize();/a   main_prog();' $main_file_cpp
   
@@ -31,6 +34,13 @@ if [ -f $main_file ]; then
     fi
   done
 
+  rm -rf Core/Src/syscalls.c
+
+  # Remove ../../Core/Src/syscalls.c from CMakeLists.txt
+  if grep -q "../../Core/Src/syscalls.c" $cmake_file; then
+    sed -i '/\.\.\/\.\.\/Core\/Src\/syscalls\.c/d' $cmake_file
+  fi
+
 
   # for Latest CubeMX 6.14 with new genration schema
   if grep -q "${CMAKE_SOURCE_DIR}/Core/Src/main.c" $cmake_file; then
@@ -41,6 +51,8 @@ if [ -f $main_file ]; then
   if grep -q "../../Core/Src/main.c" $cmake_file; then
     sed -i 's|\.\./\.\./Core/Src/main\.c|../../Core/Src/main.cpp|' $cmake_file
   fi
+
+
 
   sed -i 's|static uint8_t ucHeap\[ configTOTAL_HEAP_SIZE \];|__attribute__((section(".ramaxis_section"))) static uint8_t ucHeap\[ configTOTAL_HEAP_SIZE \];|' $heap_file
 

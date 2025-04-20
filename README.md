@@ -24,3 +24,19 @@ cd TB_embeded_base_project
 ```
 
 5. Add your code in **src** directory.
+
+### After generating code in CubeMX
+
+1. Remove Tiemr callback function from **main.c** file.
+
+```c
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+  ...
+}
+```
+
+2. Run the command
+
+```bash
+./compile.sh
+```
