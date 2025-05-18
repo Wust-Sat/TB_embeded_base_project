@@ -69,17 +69,17 @@ void task_f_blink(se::SimpleTask &task, void *args) {
   (void)task;
 
   // we will get the fdcan1 from argument
-  std::shared_ptr<se::FDCAN> fdcan = *static_cast<std::shared_ptr<se::FDCAN> *>(args);
+  // std::shared_ptr<se::FDCAN> fdcan = *static_cast<std::shared_ptr<se::FDCAN> *>(args);
 
-  // we toggle the user LED
+  // // we toggle the user LED
   gpio_status_led.toggle();
 
-  // here we perform a simple CAN write operation FOR example this would be a Heartbeat
-  se::CanDataFrame frame;
-  frame.frame_id  = 0x123;
-  frame.data[0]   = 0x01;
-  frame.data_size = 1;
-  (void)fdcan->write(frame);
+  // // here we perform a simple CAN write operation FOR example this would be a Heartbeat
+  // se::CanDataFrame frame;
+  // frame.frame_id  = 0x123;
+  // frame.data[0]   = 0x01;
+  // frame.data_size = 1;
+  // (void)fdcan->write(frame);
 }
 
 
@@ -105,8 +105,22 @@ void main_prog() {
   // now we can print log messages to debugger console
 
   // Initialize FDCAN
-  FDCAN_FilterTypeDef fdfilter = {};
-  STMEPIC_ASSING_TO_OR_HRESET(fdcan1, se::FDCAN::Make(hfdcan1, fdfilter, nullptr, nullptr));
+  FDCAN_FilterTypeDef sFilterConfig = {};
+  sFilterConfig.IdType              = FDCAN_EXTENDED_ID;
+  sFilterConfig.FilterIndex         = 0;
+  sFilterConfig.FilterType          = FDCAN_FILTER_MASK;
+  sFilterConfig.FilterConfig        = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig.FilterID1           = 0; // 0x915;
+  sFilterConfig.FilterID2           = 0; // 0x1FFFFFFF; // all have to match
+  se::FDcanFilterConfig filter_config;
+  filter_config.filters.push_back(sFilterConfig);
+  filter_config.fifo_number                  = se::FDCAN_FIFO::FDCAN_FIFO0;
+  filter_config.globalFilter_NonMatchingStd  = FDCAN_REJECT;
+  filter_config.globalFilter_NonMatchingExt  = FDCAN_REJECT;
+  filter_config.globalFilter_RejectRemoteStd = FDCAN_FILTER_REMOTE;
+  filter_config.globalFilter_RejectRemoteExt = FDCAN_FILTER_REMOTE;
+
+  STMEPIC_ASSING_TO_OR_HRESET(fdcan1, se::FDCAN::Make(hfdcan1, filter_config, nullptr, nullptr));
 
 
   // We add a callback for the CAN frame with ID 0x200
